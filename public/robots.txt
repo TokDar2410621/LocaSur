@@ -1,0 +1,33 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://housing-ai.ca/sitemap.xml
+
+# Pages privees (non indexees)
+Disallow: /dashboard
+Disallow: /messages
+Disallow: /settings
+Disallow: /profile
+Disallow: /oauth
+Disallow: /api/
+Disallow: /login
+Disallow: /signup
+Disallow: /account
+Disallow: /favoris
+Disallow: /alertes
+Disallow: /demandes
+Disallow: /proprietaire
+Disallow: /admin

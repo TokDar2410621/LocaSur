@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta name="author" content="LocaSur" />
+
+    <!--
+      NOTE: title, description, og:*, twitter:* sont geres dynamiquement par react-helmet-async
+      Chaque page (HomeSEO, CitySEO, ListingSEO, etc.) definit ses propres meta tags
+    -->
+
+    <!-- Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.locasur.ca">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+    <link rel="shortcut icon" href="/favicon.svg?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#6366f1" />
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD0WCZD2TE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FD0WCZD2TE');
+    </script>
+
+    <!-- Schema.org LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "LocaSur",
+      "description": "Plateforme de recherche de logements au Québec. Agrégateur intelligent de Kijiji, LogisQuebec et Locatio. Marketplace où locataires et propriétaires se trouvent mutuellement.",
+      "url": "https://locasur.ca",
+      "logo": "https://locasur.ca/logo.png",
+      "image": "https://locasur.ca/og-image.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "CA",
+        "addressRegion": "QC",
+        "addressLocality": "Quebec"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "46.8139",
+        "longitude": "-71.2080"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Saguenay"
+        },
+        {
+          "@type": "City",
+          "name": "Quebec"
+        },
+        {
+          "@type": "City",
+          "name": "Chicoutimi"
+        },
+        {
+          "@type": "City",
+          "name": "Montreal"
+        },
+        {
+          "@type": "City",
+          "name": "Trois-Rivieres"
+        },
+        {
+          "@type": "City",
+          "name": "Sherbrooke"
+        }
+      ],
+      "priceRange": "Gratuit",
+      "openingHours": "Mo,Tu,We,Th,Fr,Sa,Su 00:00-23:59",
+      "telephone": "+1-418-XXX-XXXX",
+      "email": "contact@locasur.ca",
+      "sameAs": [
+        "https://twitter.com/housingai",
+        "https://facebook.com/housingai"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Logements disponibles au Quebec",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Recherche de logements",
+              "description": "Recherchez parmi 2000+ annonces de Kijiji, LogisQuebec et Locatio"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Alertes personnalisees",
+              "description": "Recevez des alertes email pour les nouveaux logements correspondant a vos criteres"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Marketplace locataires-proprietaires",
+              "description": "Les proprietaires trouvent des locataires qualifies, les locataires trouvent leur logement ideal"
+            }
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- Schema.org WebSite (Search Action) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "LocaSur",
+      "url": "https://locasur.ca",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://locasur.ca/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
