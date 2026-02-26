@@ -169,7 +169,7 @@ export default function DashboardLocataireSimple() {
       count: referencesCount,
       label: "Références",
       description: "Validées par des propriétaires",
-      path: "/dashboard/references",
+      path: "/profile",
       iconBg: "bg-amber-50 dark:bg-amber-950",
       iconColor: "text-amber-500",
       hoverBorder: "hover:border-amber-200 dark:hover:border-amber-800",
@@ -332,7 +332,7 @@ export default function DashboardLocataireSimple() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                navigate(`/dashboard/references`);
+                                navigate('/profile');
                               }}
                               className="text-xs text-primary font-medium hover:underline"
                             >

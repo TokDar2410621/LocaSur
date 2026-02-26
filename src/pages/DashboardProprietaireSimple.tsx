@@ -235,7 +235,7 @@ export default function DashboardProprietaireSimple() {
       count: referencesGivenCount,
       label: "Références",
       description: "Données à des locataires",
-      path: "/host/references",
+      path: "/profile",
       iconBg: "bg-violet-50 dark:bg-violet-950",
       iconColor: "text-violet-500",
       hoverBorder: "hover:border-violet-200 dark:hover:border-violet-800",
@@ -424,7 +424,7 @@ export default function DashboardProprietaireSimple() {
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  navigate(`/host/references?give=${tenancy.id}`);
+                                  navigate(`/profile?give=${tenancy.id}`);
                                 }}
                                 className="text-xs text-violet-600 font-medium hover:underline"
                               >
