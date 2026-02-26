@@ -85,6 +85,7 @@ export default function Index() {
 
   return (
     <>
+
       <div className="min-h-screen bg-background">
         <Navbar />
 
@@ -619,7 +620,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* ===================== POURQUOI LOCASUR ===================== */}
+        {/* ===================== POURQUOI HOUSING AI ===================== */}
         <section className="py-14 md:py-20 bg-muted/30">
           <div className="container-wide px-4">
             <motion.div
