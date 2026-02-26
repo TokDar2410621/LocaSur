@@ -131,7 +131,7 @@ export function NavbarSimple({ onOpenFilters, activeFiltersCount = 0 }: NavbarSi
     // Propriétaire
     return [
       { label: "Voir locataires", to: "/host/leads", icon: Users },
-      { label: "Mes annonces", to: "/host", icon: Building2 },
+      { label: "Mes annonces", to: "/host/annonces", icon: Building2 },
       { label: "Messages", to: "/messages", icon: MessageSquare, badge: unreadCount },
     ];
   };
@@ -326,7 +326,7 @@ export function NavbarSimple({ onOpenFilters, activeFiltersCount = 0 }: NavbarSi
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-50 md:hidden transition-all duration-300",
         isHomePage && !isScrolled
-          ? "bg-gradient-to-r from-blue-100/70 via-violet-100/50 to-blue-100/70 dark:from-blue-950/50 dark:via-violet-950/40 dark:to-blue-950/50 backdrop-blur-xl border-b border-white/30 dark:border-white/10"
+          ? "bg-transparent"
           : "bg-background border-b border-border"
       )}>
         {/* Row 1: Logo + Avatar Menu */}
@@ -569,7 +569,7 @@ export function NavbarSimple({ onOpenFilters, activeFiltersCount = 0 }: NavbarSi
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-50 hidden md:block transition-all duration-300",
         isHomePage && !isScrolled
-          ? "bg-gradient-to-r from-blue-100/70 via-violet-100/50 to-blue-100/70 dark:from-blue-950/50 dark:via-violet-950/40 dark:to-blue-950/50 backdrop-blur-xl border-b border-white/30 dark:border-white/10"
+          ? "bg-transparent"
           : "bg-background border-b border-border"
       )}>
         <div className="container-wide">

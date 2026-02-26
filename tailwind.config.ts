@@ -119,6 +119,8 @@ export default {
         "soft": "0 2px 8px rgba(0, 0, 0, 0.06)",
         "soft-lg": "0 4px 16px rgba(0, 0, 0, 0.08)",
         "soft-xl": "0 8px 32px rgba(0, 0, 0, 0.1)",
+        "dark-elevated": "0 4px 24px hsl(230 20% 0% / 0.5), 0 0 0 1px hsl(210 40% 96% / 0.04)",
+        "dark-elevated-lg": "0 8px 40px hsl(230 20% 0% / 0.6), 0 0 0 1px hsl(210 40% 96% / 0.05)",
         "glow-sm": "0 0 15px hsl(var(--primary) / 0.3)",
         "glow-md": "0 0 25px hsl(var(--primary) / 0.4)",
         "glow-lg": "0 0 40px hsl(var(--primary) / 0.5)",
@@ -126,6 +128,7 @@ export default {
         "glow-match": "0 0 30px hsl(var(--match-glow) / 0.4)",
         "glow-premium": "0 0 30px hsl(var(--premium-glow) / 0.4)",
         "inner-glow": "inset 0 0 20px hsl(var(--primary) / 0.1)",
+        "dark-inner-glow": "inset 0 1px 0 hsl(210 40% 96% / 0.05), inset 0 0 20px hsl(var(--primary) / 0.05)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

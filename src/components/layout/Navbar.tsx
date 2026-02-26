@@ -214,12 +214,12 @@ export function NavbarLegacy() {
                           <span>Louer mon logement</span>
                         </button>
                         <Link
-                          to="/help"
+                          to="/blog"
                           onClick={() => setIsMenuOpen(false)}
                           className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors"
                         >
                           <BookOpen className="w-4 h-4 text-muted-foreground" />
-                          <span>Aide</span>
+                          <span>Blog</span>
                         </Link>
                         <Link
                           to="/help"
@@ -282,7 +282,7 @@ export function NavbarLegacy() {
                           <span>Mon profil</span>
                         </Link>
                         <Link
-                          to="/profile"
+                          to="/settings"
                           onClick={() => setIsMenuOpen(false)}
                           className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors"
                         >
@@ -354,7 +354,7 @@ export function NavbarLegacy() {
                           <span>Mon profil</span>
                         </Link>
                         <Link
-                          to="/profile"
+                          to="/settings"
                           onClick={() => setIsMenuOpen(false)}
                           className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors"
                         >

@@ -49,18 +49,18 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Products */}
           <div>
-            <h4 className="font-semibold mb-4">Explorer</h4>
+            <h4 className="font-semibold mb-4">Produits</h4>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link to="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Rechercher un logement
+                  Housing Search
                 </Link>
               </li>
               <li>
-                <Link to="/demandes" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Demandes de locataires
+                <Link to="/match" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Housing Match
                 </Link>
               </li>
             </ul>
@@ -81,8 +81,8 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/dashboard"
-                  onClick={(e) => handleProtectedClick(e, '/dashboard')}
+                  href="/dashboard/favoris"
+                  onClick={(e) => handleProtectedClick(e, '/dashboard/favoris')}
                   className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   Mes favoris
@@ -90,8 +90,8 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/search"
-                  onClick={(e) => handleProtectedClick(e, '/search')}
+                  href="/dashboard/alertes"
+                  onClick={(e) => handleProtectedClick(e, '/dashboard/alertes')}
                   className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   Mes alertes
@@ -124,8 +124,8 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/demandes"
-                  onClick={(e) => handleProtectedClick(e, '/demandes', 'host')}
+                  href="/host/demandes"
+                  onClick={(e) => handleProtectedClick(e, '/host/demandes', 'host')}
                   className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   Voir les demandes
@@ -135,8 +135,35 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Villes populaires & Support */}
+        {/* Ressources & SEO Links */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mt-8 pt-8 border-t border-border">
+          {/* Ressources */}
+          <div>
+            <h4 className="font-semibold mb-4">Ressources</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Centre d'aide
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog?category=conseils-locataires" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Conseils locataires
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog?category=conseils-proprietaires" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Conseils propriétaires
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Villes populaires */}
           <div>
             <h4 className="font-semibold mb-4">Villes populaires</h4>
@@ -164,7 +191,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Contact & Support */}
           <div>
             <h4 className="font-semibold mb-4">Support</h4>
             <ul className="space-y-3 text-sm">
@@ -174,13 +201,18 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:contact@locasur.ca" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
                   Nous contacter
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/feedback" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Donner votre avis
+                </Link>
               </li>
               <li>
                 <Link to="/pour-proprietaires" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Pour les propriétaires
+                  Pour les proprietaires
                 </Link>
               </li>
             </ul>

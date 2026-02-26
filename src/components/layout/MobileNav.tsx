@@ -70,7 +70,7 @@ export function MobileNavLegacy() {
       // Dashboard regroupe stats, Favoris pour accès rapide, Créer demande au centre (highlight)
       return [
         { icon: Home, label: "Dashboard", path: "/dashboard", reviewBadge: pendingReviewsCount },
-        { icon: Heart, label: "Favoris", path: "/dashboard" },
+        { icon: Heart, label: "Favoris", path: "/dashboard/favoris" },
         { icon: Plus, label: "Demande", path: "/dashboard/demande/new", highlight: true },
         { icon: MessageSquare, label: "Messages", path: "/messages", badge: unreadCount },
         { icon: User, label: "Profil", path: "/profile" },

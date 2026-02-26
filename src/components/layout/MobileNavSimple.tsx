@@ -56,7 +56,7 @@ export function MobileNavSimple() {
           const { getDashboardLocataire } = await import('@/lib/matchApi');
           const response = await getDashboardLocataire();
           if (response.success) {
-            setHasActiveRequest(!!response.demande_active);
+            setHasActiveRequest(!!(response as any).demande_active);
           }
         } else if (isBailleur) {
           const { getDashboardProprietaire } = await import('@/lib/matchApi');
