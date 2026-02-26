@@ -97,7 +97,7 @@ export function ProfileLegacy() {
   // Redirect users without profile to type selection
   useEffect(() => {
     if (user && !user.profile) {
-      navigate('/profile/type-selection');
+      navigate('/profile');
     }
   }, [user, navigate]);
 
@@ -373,7 +373,7 @@ export function ProfileLegacy() {
                   Consultez et gérez vos informations
                 </p>
               </div>
-              <Link to="/profile/wizard">
+              <Link to="/profile">
                 <Button className="rounded-xl gradient-match text-white w-full sm:w-auto">
                   <Edit className="w-4 h-4 mr-2" />
                   Modifier
@@ -925,7 +925,7 @@ export function ProfileLegacy() {
               {/* Bouton modifier en bas - LOCATAIRES UNIQUEMENT */}
               {isLocataire && (
                 <div className="text-center pt-4">
-                  <Link to="/profile/wizard">
+                  <Link to="/profile">
                     <Button className="rounded-xl gradient-match text-white px-8">
                       <Edit className="w-4 h-4 mr-2" />
                       Modifier mon profil locataire

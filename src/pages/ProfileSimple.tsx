@@ -58,7 +58,7 @@ export default function ProfileSimple() {
 
   useEffect(() => {
     if (user && !user.profile) {
-      navigate('/profile/type-selection');
+      navigate('/profile');
     }
   }, [user, navigate]);
 
@@ -300,7 +300,7 @@ export default function ProfileSimple() {
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">{completude}% complété</span>
-                    <Link to="/profile/wizard">
+                    <Link to="/profile">
                       <Button size="sm" className="rounded-xl">
                         <Edit className="w-4 h-4 mr-1" />
                         Compléter
@@ -337,7 +337,7 @@ export default function ProfileSimple() {
 
               {/* Zone 4: Actions rapides */}
               <div className="space-y-2">
-                <Link to="/profile/wizard" className="block">
+                <Link to="/profile" className="block">
                   <button className="w-full flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:bg-muted/50 transition-colors">
                     <div className="flex items-center gap-3">
                       <Edit className="w-5 h-5 text-primary" />

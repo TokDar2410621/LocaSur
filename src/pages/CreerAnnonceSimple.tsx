@@ -119,12 +119,12 @@ export default function CreerAnnonceSimple() {
         setExistingImages(images);
       } else {
         toast.error("Annonce introuvable");
-        navigate('/host/listings');
+        navigate('/host');
       }
     } catch (error: any) {
       toast.error("Erreur lors du chargement");
       console.error(error);
-      navigate('/host/listings');
+      navigate('/host');
     } finally {
       setLoading(false);
     }
@@ -223,7 +223,7 @@ export default function CreerAnnonceSimple() {
         const data = await response.json();
         if (data.success) {
           toast.success("Annonce mise à jour!");
-          navigate('/host/listings');
+          navigate('/host');
         } else {
           throw new Error(data.message || data.error || "Erreur");
         }

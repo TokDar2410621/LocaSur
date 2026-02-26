@@ -709,7 +709,7 @@ export default function Index() {
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="rounded-full h-12 px-8" asChild>
-                  <Link to="/host/demandes">
+                  <Link to="/demandes">
                     <Users className="w-4 h-4 mr-2" />
                     Voir les demandes
                   </Link>

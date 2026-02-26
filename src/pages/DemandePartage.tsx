@@ -338,7 +338,7 @@ export default function DemandePartage() {
                   Vous êtes propriétaire et cette demande vous intéresse?
                 </p>
                 <Button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/")}
                   className="rounded-xl gradient-match text-white w-full sm:w-auto"
                   size="lg"
                 >

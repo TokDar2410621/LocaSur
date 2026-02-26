@@ -54,16 +54,8 @@ export default function DashboardLocataireSimple() {
 
   useEffect(() => {
     if (user) {
-      if (!user.profile) {
-        navigate('/profile/type-selection');
-        return;
-      }
-      if (!user.profile.user_type) {
-        navigate('/profile/type-selection');
-        return;
-      }
-      if (user.profile.user_type === 'locataire' && !user.profile.onboarding_completed) {
-        navigate('/profile/wizard');
+      if (!user.profile || !user.profile.user_type) {
+        navigate('/profile');
         return;
       }
     }
@@ -365,7 +357,7 @@ export default function DashboardLocataireSimple() {
                 {/* CTA Buttons */}
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => navigate('/dashboard/references?add=true')}
+                    onClick={() => navigate('/profile?add=true')}
                     className="flex-1 h-11 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-medium"
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -373,7 +365,7 @@ export default function DashboardLocataireSimple() {
                   </Button>
                   {rentalHistoryList.length > 0 && (
                     <Button
-                      onClick={() => navigate('/dashboard/references')}
+                      onClick={() => navigate('/profile')}
                       variant="outline"
                       className="h-11 rounded-xl border-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30"
                     >
@@ -436,7 +428,7 @@ export default function DashboardLocataireSimple() {
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold text-muted-foreground">Complétude du profil</h3>
                     <button
-                      onClick={() => navigate('/profile/wizard')}
+                      onClick={() => navigate('/profile')}
                       className="text-xs text-primary hover:underline font-medium"
                     >
                       Améliorer
@@ -446,7 +438,7 @@ export default function DashboardLocataireSimple() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {profileCompletion < 100 && (
                       <button
-                        onClick={() => navigate('/profile/wizard')}
+                        onClick={() => navigate('/profile')}
                         className="text-left group"
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -468,7 +460,7 @@ export default function DashboardLocataireSimple() {
 
                     {verificationLevel !== 'identity_confirmed' && (
                       <button
-                        onClick={() => navigate('/verification')}
+                        onClick={() => navigate('/profile')}
                         className="text-left group"
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -505,7 +497,7 @@ export default function DashboardLocataireSimple() {
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-semibold">Tes favoris</h2>
                   <button
-                    onClick={() => navigate('/dashboard/favoris')}
+                    onClick={() => navigate('/dashboard')}
                     className="text-sm text-primary font-medium flex items-center gap-1"
                   >
                     Voir tout

@@ -132,13 +132,9 @@ export function ChatWidget({ className }: ChatWidgetProps) {
     }, 100);
   };
 
-  // Handle button click - redirect on mobile, open modal on desktop
+  // Handle button click - toggle widget
   const handleButtonClick = () => {
-    if (isMobile) {
-      navigate('/chat');
-    } else {
-      setIsOpen(!isOpen);
-    }
+    setIsOpen(!isOpen);
   };
 
   const handleSendMessage = async (messageText?: string) => {

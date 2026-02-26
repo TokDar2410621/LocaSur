@@ -58,7 +58,7 @@ export function DashboardSidebar({ userType, user, stats, onLogout }: DashboardS
   const landlordNav: NavItem[] = [
     { icon: Home, label: "Apercu", path: "/host" },
     { icon: Users, label: "Locataires", path: "/host/leads" },
-    { icon: Building2, label: "Annonces", path: "/host/listings", badge: stats.annoncesCount },
+    { icon: Building2, label: "Annonces", path: "/host", badge: stats.annoncesCount },
     { icon: Inbox, label: "Candidatures", path: "/host/candidatures" },
     { icon: Star, label: "References", path: "/host/references", badge: stats.referencesGivenCount },
     { icon: MessageSquare, label: "Messages", path: "/messages", badge: stats.unreadMessages },
@@ -100,7 +100,7 @@ export function DashboardSidebar({ userType, user, stats, onLogout }: DashboardS
 
         {/* Compact Verification Bar */}
         <button
-          onClick={() => navigate('/verification')}
+          onClick={() => navigate('/profile')}
           className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
         >
           {stats.verificationLevel === 'identity_confirmed' ? (
@@ -188,7 +188,7 @@ export function DashboardSidebar({ userType, user, stats, onLogout }: DashboardS
             <span>Mon profil</span>
           </Link>
           <Link
-            to="/settings"
+            to="/profile"
             className={cn(
               "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
               location.pathname === '/settings'

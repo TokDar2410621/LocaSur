@@ -237,7 +237,7 @@ export default function OAuthCallback() {
       // Vérifier si l'utilisateur a un profil complet
       if (!currentUser.profile || !currentUser.profile.user_type) {
         // Nouveau compte Google → Sélection du type d'utilisateur
-        navigate('/profile/type-selection?from=oauth');
+        navigate('/profile');
         return;
       }
 
@@ -245,14 +245,14 @@ export default function OAuthCallback() {
       if (currentUser.profile.user_type === 'proprietaire' || currentUser.profile.user_type === 'bailleur') {
         // Propriétaire: vérifier si onboarding complété
         if (!currentUser.profile.onboarding_completed) {
-          navigate('/profile/wizard/proprietaire');
+          navigate('/profile');
         } else {
           navigate('/host');
         }
       } else {
         // Locataire: vérifier si onboarding complété
         if (!currentUser.profile.onboarding_completed) {
-          navigate('/profile/wizard');
+          navigate('/profile');
         } else {
           navigate('/dashboard');
         }

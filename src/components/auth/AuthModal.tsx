@@ -191,15 +191,15 @@ export default function AuthModal({ open, onClose, onSuccess, trigger = 'favorit
               credentials: 'include',
               body: JSON.stringify({ user_type: 'bailleur' }),
             });
-            navigate('/profile/wizard/proprietaire');
+            navigate('/profile');
           } catch (e) {
             console.warn("Failed to set user type:", e);
-            navigate('/profile/type-selection');
+            navigate('/profile');
           }
           return;
         }
 
-        navigate('/profile/type-selection');
+        navigate('/profile');
       } else {
         await login({ email, password });
         toast.success("Connexion réussie!");

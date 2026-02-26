@@ -59,7 +59,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/match" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/demandes" className="text-muted-foreground hover:text-foreground transition-colors">
                   Housing Match
                 </Link>
               </li>
@@ -124,8 +124,8 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/host/demandes"
-                  onClick={(e) => handleProtectedClick(e, '/host/demandes', 'host')}
+                  href="/demandes"
+                  onClick={(e) => handleProtectedClick(e, '/demandes', 'host')}
                   className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   Voir les demandes
@@ -142,7 +142,7 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Ressources</h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
                   Blog
                 </Link>
               </li>
@@ -152,12 +152,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/blog?category=conseils-locataires" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
                   Conseils locataires
                 </Link>
               </li>
               <li>
-                <Link to="/blog?category=conseils-proprietaires" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
                   Conseils propriétaires
                 </Link>
               </li>
@@ -201,12 +201,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
                   Nous contacter
                 </Link>
               </li>
               <li>
-                <Link to="/feedback" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
                   Donner votre avis
                 </Link>
               </li>

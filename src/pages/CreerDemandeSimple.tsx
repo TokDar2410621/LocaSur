@@ -35,7 +35,7 @@ export default function CreerDemandeSimple() {
 
   useEffect(() => {
     if (user && !user.profile) {
-      navigate('/profile/type-selection');
+      navigate('/profile');
     }
   }, [user, navigate]);
 

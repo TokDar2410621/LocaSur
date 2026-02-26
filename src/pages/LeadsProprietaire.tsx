@@ -255,7 +255,7 @@ export function LeadsProprietaireLegacy() {
   const handleUpgradePremium = () => {
     // TODO: Rediriger vers Stripe Checkout
     toast.info("Redirection vers la page d'abonnement...");
-    navigate("/host/subscribe");
+    navigate("/host");
   };
 
   const handleContactLead = (leadId: number) => {

@@ -357,7 +357,7 @@ export function CreerDemandeLegacy() {
 
       toast.success('Demande publiée! Les propriétaires pourront vous contacter directement.');
       // Rediriger vers une page de confirmation
-      navigate('/demande/confirmation');
+      navigate('/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'Erreur lors de la création de la demande');
     }

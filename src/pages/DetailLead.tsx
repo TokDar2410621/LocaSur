@@ -223,7 +223,7 @@ export default function DetailLead() {
 
   const handleUpgradePremium = () => {
     toast.info("Redirection vers la page d'abonnement Premium...");
-    navigate('/match/pro/premium');
+    navigate('/host');
   };
 
   const getGradeColor = (grade: string) => {

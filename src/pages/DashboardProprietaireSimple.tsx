@@ -61,16 +61,8 @@ export default function DashboardProprietaireSimple() {
   // Redirect users without profile or incomplete onboarding
   useEffect(() => {
     if (user) {
-      if (!user.profile) {
-        navigate('/profile/type-selection');
-        return;
-      }
-      if (!user.profile.user_type) {
-        navigate('/profile/type-selection');
-        return;
-      }
-      if ((user.profile.user_type === 'proprietaire' || user.profile.user_type === 'bailleur') && !user.profile.onboarding_completed) {
-        navigate('/profile/wizard/proprietaire');
+      if (!user.profile || !user.profile.user_type) {
+        navigate('/profile');
         return;
       }
     }
@@ -463,7 +455,7 @@ export default function DashboardProprietaireSimple() {
                 {/* CTA Buttons */}
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => navigate('/host/references?add=true')}
+                    onClick={() => navigate('/profile?add=true')}
                     className="flex-1 h-11 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-medium"
                   >
                     <UserPlus className="w-4 h-4 mr-2" />
@@ -471,7 +463,7 @@ export default function DashboardProprietaireSimple() {
                   </Button>
                   {declaredTenancies.length > 0 && (
                     <Button
-                      onClick={() => navigate('/host/references')}
+                      onClick={() => navigate('/profile')}
                       variant="outline"
                       className="h-11 rounded-xl border-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                     >
@@ -534,7 +526,7 @@ export default function DashboardProprietaireSimple() {
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold text-muted-foreground">Complétude du profil</h3>
                     <button
-                      onClick={() => navigate('/profile/wizard/proprietaire')}
+                      onClick={() => navigate('/profile')}
                       className="text-xs text-primary hover:underline font-medium"
                     >
                       Améliorer
@@ -544,7 +536,7 @@ export default function DashboardProprietaireSimple() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {profileCompletion < 100 && (
                       <button
-                        onClick={() => navigate('/profile/wizard/proprietaire')}
+                        onClick={() => navigate('/profile')}
                         className="text-left group"
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -566,7 +558,7 @@ export default function DashboardProprietaireSimple() {
 
                     {verificationLevel !== 'identity_confirmed' && (
                       <button
-                        onClick={() => navigate('/verification')}
+                        onClick={() => navigate('/profile')}
                         className="text-left group"
                       >
                         <div className="flex items-center gap-2 mb-2">
