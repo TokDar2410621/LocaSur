@@ -1,10 +1,6 @@
 /**
- * Créer Demande - Version simplifiée v2.0
- *
- * Principes:
- * - 3 étapes max
- * - 5 champs essentiels
- * - Pas de wizard complexe
+ * Créer Demande - Version simplifiée v3.0
+ * Style épuré, champs réorganisés
  */
 
 import { useState, useEffect } from "react";
@@ -13,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
-import { MapPin, DollarSign, Home, ArrowRight, Check, Loader2 } from "lucide-react";
+import { MapPin, DollarSign, Home, ArrowRight, Check, Loader2, CalendarDays, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useDemandes } from "@/hooks/useDemandes";
@@ -29,7 +25,6 @@ export default function CreerDemandeSimple() {
   const { createDemande, loading: submitting } = useDemandes();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Formulaire simplifié - 5 champs seulement
   const [form, setForm] = useState({
     ville: "",
     budgetMax: "",
@@ -38,7 +33,6 @@ export default function CreerDemandeSimple() {
     message: ""
   });
 
-  // Redirect if not authenticated and trying to submit
   useEffect(() => {
     if (user && !user.profile) {
       navigate('/profile/type-selection');
@@ -64,7 +58,6 @@ export default function CreerDemandeSimple() {
     }
 
     try {
-      // Convert date to ISO format
       let dateEmmenagement = "";
       const now = new Date();
       const year = now.getMonth() >= 6 ? now.getFullYear() + 1 : now.getFullYear();
@@ -80,7 +73,7 @@ export default function CreerDemandeSimple() {
           dateEmmenagement = `${year}-08-01`;
           break;
         default:
-          dateEmmenagement = `${year}-07-01`; // Default
+          dateEmmenagement = `${year}-07-01`;
       }
 
       await createDemande({
@@ -101,14 +94,11 @@ export default function CreerDemandeSimple() {
 
   const handleAuthSuccess = async () => {
     setShowAuthModal(false);
-
-    // Restore form and submit
     const pending = localStorage.getItem('pending_demande_simple');
     if (pending) {
       localStorage.removeItem('pending_demande_simple');
     }
 
-    // Set user type as tenant
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const token = localStorage.getItem('auth_token');
@@ -137,131 +127,148 @@ export default function CreerDemandeSimple() {
         <div className="max-w-lg mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold mb-2">Créer une demande</h1>
-            <p className="text-sm text-muted-foreground">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold tracking-tight mb-2">Créer une demande</h1>
+            <p className="text-muted-foreground">
               Décrivez ce que vous cherchez en 30 secondes
             </p>
           </div>
 
-          {/* Formulaire unique */}
-          <div className="bg-card rounded-2xl p-6 border border-border space-y-6">
+          {/* Form Card */}
+          <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
 
-            {/* 1. Ville */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                Où cherchez-vous?
-              </label>
-              <Input
-                placeholder="Ex: Saguenay, Québec, Montréal..."
-                value={form.ville}
-                onChange={(e) => setForm({ ...form, ville: e.target.value })}
-                className="rounded-xl h-12"
-              />
-            </div>
+            {/* Section: Localisation & Budget */}
+            <div className="p-6 space-y-5">
+              {/* Ville */}
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  Où cherchez-vous?
+                </label>
+                <Input
+                  placeholder="Ex: Saguenay, Québec, Montréal..."
+                  value={form.ville}
+                  onChange={(e) => setForm({ ...form, ville: e.target.value })}
+                  className="rounded-xl h-12"
+                />
+              </div>
 
-            {/* 2. Budget */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                <DollarSign className="w-4 h-4 text-primary" />
-                Budget maximum
-              </label>
-              <Input
-                type="number"
-                placeholder="Ex: 1000"
-                value={form.budgetMax}
-                onChange={(e) => setForm({ ...form, budgetMax: e.target.value })}
-                className="rounded-xl h-12"
-              />
-              <p className="text-xs text-muted-foreground mt-1">$/mois</p>
-            </div>
-
-            {/* 3. Type de logement */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                <Home className="w-4 h-4 text-primary" />
-                Type de logement
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {TYPES_LOGEMENT.map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => toggleType(type)}
-                    className={cn(
-                      "px-4 py-2.5 rounded-xl text-sm font-medium border-2 transition-all",
-                      form.type.includes(type)
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "border-border hover:border-primary/50"
-                    )}
-                  >
-                    {form.type.includes(type) && <Check className="w-4 h-4 inline mr-1" />}
-                    {type}
-                  </button>
-                ))}
+              {/* Budget */}
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                  <DollarSign className="w-4 h-4 text-primary" />
+                  Budget maximum
+                </label>
+                <Input
+                  type="number"
+                  placeholder="Ex: 1000"
+                  value={form.budgetMax}
+                  onChange={(e) => setForm({ ...form, budgetMax: e.target.value })}
+                  className="rounded-xl h-12"
+                />
+                <p className="text-xs text-muted-foreground mt-1.5">$/mois</p>
               </div>
             </div>
 
-            {/* 4. Date */}
-            <div>
-              <label className="text-sm font-semibold mb-2 block">
-                Quand?
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {DATES_POPULAIRES.map((date) => (
-                  <button
-                    key={date}
-                    onClick={() => setForm({ ...form, date })}
-                    className={cn(
-                      "px-4 py-2.5 rounded-xl text-sm font-medium border-2 transition-all",
-                      form.date === date
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "border-border hover:border-primary/50"
-                    )}
-                  >
-                    {date}
-                  </button>
-                ))}
+            <div className="border-t border-border" />
+
+            {/* Section: Logement & Date */}
+            <div className="p-6 space-y-5">
+              {/* Type de logement */}
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                  <Home className="w-4 h-4 text-primary" />
+                  Type de logement
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {TYPES_LOGEMENT.map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => toggleType(type)}
+                      className={cn(
+                        "h-11 min-w-[56px] px-4 rounded-xl text-sm font-medium border transition-all inline-flex items-center justify-center gap-1.5",
+                        form.type.includes(type)
+                          ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                          : "border-border hover:border-primary/40 hover:bg-accent/50"
+                      )}
+                    >
+                      {form.type.includes(type) && <Check className="w-3.5 h-3.5" />}
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Date */}
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                  <CalendarDays className="w-4 h-4 text-primary" />
+                  Quand?
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {DATES_POPULAIRES.map((date) => (
+                    <button
+                      key={date}
+                      onClick={() => setForm({ ...form, date })}
+                      className={cn(
+                        "h-11 rounded-xl text-sm font-medium border transition-all flex items-center justify-center",
+                        form.date === date
+                          ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                          : "border-border hover:border-primary/40 hover:bg-accent/50"
+                      )}
+                    >
+                      {date}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* 5. Message (optionnel) */}
-            <div>
-              <label className="text-sm font-semibold mb-2 block">
-                Un mot pour les propriétaires? <span className="text-muted-foreground font-normal">(optionnel)</span>
-              </label>
-              <textarea
-                placeholder="Je suis étudiant/professionnel, calme, sans animaux..."
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                rows={3}
-                maxLength={200}
-                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-sm resize-none"
-              />
-              <p className="text-xs text-muted-foreground text-right">{form.message.length}/200</p>
-            </div>
+            <div className="border-t border-border" />
 
-            {/* Submit */}
-            <Button
-              onClick={handleSubmit}
-              disabled={!canSubmit || submitting}
-              className="w-full h-12 rounded-xl text-base"
-            >
-              {submitting ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  Publier ma demande
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </>
+            {/* Section: Message */}
+            <div className="p-6 space-y-5">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                  <MessageSquare className="w-4 h-4 text-primary" />
+                  Un mot pour les propriétaires?{" "}
+                  <span className="text-muted-foreground font-normal text-xs">(optionnel)</span>
+                </label>
+                <textarea
+                  placeholder="Je suis étudiant/professionnel, calme, sans animaux..."
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  rows={3}
+                  maxLength={200}
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-background text-base resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 touch-manipulation"
+                  style={{ fontSize: '16px' }}
+                />
+                <p className="text-xs text-muted-foreground text-right mt-1">{form.message.length}/200</p>
+              </div>
+
+              {/* Submit */}
+              <Button
+                onClick={handleSubmit}
+                disabled={!canSubmit || submitting}
+                size="lg"
+                className="w-full h-12 rounded-xl text-base font-semibold"
+              >
+                {submitting ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    Publier ma demande
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </>
+                )}
+              </Button>
+
+              {!isAuthenticated && (
+                <p className="text-xs text-center text-muted-foreground">
+                  Vous devrez créer un compte pour publier
+                </p>
               )}
-            </Button>
-
-            {!isAuthenticated && (
-              <p className="text-xs text-center text-muted-foreground">
-                Vous devrez créer un compte pour publier
-              </p>
-            )}
+            </div>
           </div>
         </div>
       </div>

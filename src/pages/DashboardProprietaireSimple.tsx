@@ -223,7 +223,7 @@ export default function DashboardProprietaireSimple() {
       count: annoncesCount,
       label: "Annonces",
       description: "Logements publiés",
-      path: "/host",
+      path: "/host/annonces",
       iconBg: "bg-violet-50 dark:bg-violet-950",
       iconColor: "text-violet-500",
       hoverBorder: "hover:border-violet-200 dark:hover:border-violet-800",
@@ -233,7 +233,7 @@ export default function DashboardProprietaireSimple() {
       count: candidaturesCount,
       label: "Candidatures",
       description: "Reçues de locataires",
-      path: "/host",
+      path: "/host/candidatures",
       iconBg: "bg-amber-50 dark:bg-amber-950",
       iconColor: "text-amber-500",
       hoverBorder: "hover:border-amber-200 dark:hover:border-amber-800",
@@ -243,7 +243,7 @@ export default function DashboardProprietaireSimple() {
       count: referencesGivenCount,
       label: "Références",
       description: "Données à des locataires",
-      path: "/profile",
+      path: "/host/references",
       iconBg: "bg-violet-50 dark:bg-violet-950",
       iconColor: "text-violet-500",
       hoverBorder: "hover:border-violet-200 dark:hover:border-violet-800",
@@ -432,7 +432,7 @@ export default function DashboardProprietaireSimple() {
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  navigate(`/profile?give=${tenancy.id}`);
+                                  navigate(`/host/references?give=${tenancy.id}`);
                                 }}
                                 className="text-xs text-violet-600 font-medium hover:underline"
                               >
@@ -463,7 +463,7 @@ export default function DashboardProprietaireSimple() {
                 {/* CTA Buttons */}
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => navigate('/profile?add=true')}
+                    onClick={() => navigate('/host/references?add=true')}
                     className="flex-1 h-11 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-medium"
                   >
                     <UserPlus className="w-4 h-4 mr-2" />
@@ -471,7 +471,7 @@ export default function DashboardProprietaireSimple() {
                   </Button>
                   {declaredTenancies.length > 0 && (
                     <Button
-                      onClick={() => navigate('/host')}
+                      onClick={() => navigate('/host/references')}
                       variant="outline"
                       className="h-11 rounded-xl border-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                     >

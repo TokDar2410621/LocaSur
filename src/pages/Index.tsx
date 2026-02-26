@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { HERO_CAROUSEL_IMAGES, getCityImage } from "@/lib/images";
 import { useUserLocation, formatLocationText } from "@/hooks/useUserLocation";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const popularCities = [
   "Montréal", "Québec", "Laval", "Gatineau", "Saguenay", "Sherbrooke"
@@ -54,6 +55,7 @@ const typeOptions = [
 
 export default function Index() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [searchCity, setSearchCity] = useState("");
   const [searchBudget, setSearchBudget] = useState("");
@@ -83,13 +85,12 @@ export default function Index() {
 
   return (
     <>
-
       <div className="min-h-screen bg-background">
         <Navbar />
 
         {/* ===================== HERO - Full Bleed ===================== */}
         <section className="relative min-h-[85vh] md:min-h-[75vh] flex items-center justify-center overflow-hidden">
-          {/* Background Image Carousel - Full Bleed */}
+          {/* Background Image Carousel */}
           <div className="absolute inset-0 z-0">
             <AnimatePresence mode="wait">
               <motion.img
@@ -104,21 +105,48 @@ export default function Index() {
                 loading="eager"
               />
             </AnimatePresence>
-            {/* Pastel overlay (light mode) / Dark overlay (dark mode) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-100/90 via-violet-50/85 to-purple-100/90 dark:from-black/50 dark:via-black/40 dark:to-black/60" />
+            {/* Base dimming layer */}
+            <div className="absolute inset-0 dark:hidden" style={{
+              background: `hsla(230,60%,96%,0.45)`
+            }} />
+            <div className="absolute inset-0 hidden dark:block" style={{
+              background: `hsla(230,20%,5%,0.5)`
+            }} />
+            {/* Couche 1 - Radial central */}
+            <div className="absolute inset-0 dark:hidden" style={{
+              background: `radial-gradient(circle at 50% 45%, hsla(0,0%,100%,0.92) 0%, transparent 60%)`
+            }} />
+            <div className="absolute inset-0 hidden dark:block" style={{
+              background: `radial-gradient(circle at 50% 45%, hsla(230,20%,5%,0.75) 0%, transparent 60%)`
+            }} />
+            {/* Couche 2 - Vignette bords */}
+            <div className="absolute inset-0 dark:hidden" style={{
+              background: `radial-gradient(ellipse 80% 70% at 50% 45%, transparent 25%, hsla(230,60%,92%,0.85) 100%)`
+            }} />
+            <div className="absolute inset-0 hidden dark:block" style={{
+              background: `radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, hsla(230,20%,4%,0.85) 100%)`
+            }} />
+            {/* Couche 3 - Gradient haut */}
+            <div className="absolute inset-0 dark:hidden" style={{
+              background: `linear-gradient(to bottom, hsla(230,80%,95%,0.7) 0%, transparent 55%)`
+            }} />
+            <div className="absolute inset-0 hidden dark:block" style={{
+              background: `linear-gradient(to bottom, hsla(230,20%,5%,0.6) 0%, transparent 50%)`
+            }} />
           </div>
 
-          {/* Hero Content - Centered */}
+          {/* Hero Content */}
           <div className="relative z-10 w-full px-4 pt-24 pb-16 md:pt-32 md:pb-20">
             <div className="max-w-3xl mx-auto text-center">
+              {/* Main Heading */}
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground dark:text-white mb-2 md:mb-3 leading-tight font-display"
               >
                 Trouvez votre{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                   logement idéal
                 </span>
                 <br />
@@ -127,37 +155,50 @@ export default function Index() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.3 }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400"
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-[hsl(280,70%,50%)]"
                 >
                   {isLocationLoading ? "au Québec" : heroLocationText}
                 </motion.span>
               </motion.h1>
 
+              {/* Subtitle - matching reference */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="text-lg sm:text-xl md:text-2xl text-foreground/80 dark:text-white/80 mb-1.5 font-semibold"
+              >
+                Grâce à{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary font-bold">
+                  l'IA
+                </span>
+                , en quelques secondes.
+              </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-white/80 mb-2 font-medium"
+                className="text-sm sm:text-base text-muted-foreground dark:text-white/60 mb-2"
               >
-                Matching intelligent entre locataires et propriétaires.
+                Matching intelligent entre étudiants et propriétaires.
               </motion.p>
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.25 }}
-                className="text-sm sm:text-base text-gray-500 dark:text-white/60 mb-8"
+                className="text-sm text-muted-foreground dark:text-white/50 mb-7 md:mb-8"
               >
                 Simple. Rapide. Gratuit.
               </motion.p>
 
-              {/* Structured Search Bar - Glass Effect */}
+              {/* ===== Search Bar ===== */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.35 }}
-                className="max-w-2xl mx-auto mb-5"
+                className="max-w-2xl mx-auto mb-4"
               >
-                <div className="bg-white/95 dark:bg-card/95 backdrop-blur-xl rounded-full p-1.5 shadow-xl border border-white/30 dark:border-border flex items-center gap-0">
+                <div className="bg-card/95 dark:bg-card/90 backdrop-blur-xl rounded-full p-1.5 shadow-xl border border-border/50 flex items-center gap-0">
                   {/* Où ? */}
                   <div className="relative flex-1 min-w-0">
                     <select
@@ -169,7 +210,7 @@ export default function Index() {
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   </div>
 
                   <div className="w-px h-6 bg-border/60 flex-shrink-0" />
@@ -185,33 +226,37 @@ export default function Index() {
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   </div>
 
-                  <div className="w-px h-6 bg-border/60 flex-shrink-0" />
-
-                  {/* Type */}
-                  <div className="relative flex-1 min-w-0">
-                    <select
-                      value={searchType}
-                      onChange={(e) => setSearchType(e.target.value)}
-                      className="w-full h-11 pl-4 pr-8 bg-transparent text-foreground text-sm font-medium rounded-full appearance-none cursor-pointer focus:outline-none focus:bg-muted/50 transition-colors"
-                    >
-                      {typeOptions.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                  </div>
+                  {/* Type - Desktop only */}
+                  {!isMobile && (
+                    <>
+                      <div className="w-px h-6 bg-border/60 flex-shrink-0" />
+                      <div className="relative flex-1 min-w-0">
+                        <select
+                          value={searchType}
+                          onChange={(e) => setSearchType(e.target.value)}
+                          className="w-full h-11 pl-4 pr-8 bg-transparent text-foreground text-sm font-medium rounded-full appearance-none cursor-pointer focus:outline-none focus:bg-muted/50 transition-colors"
+                        >
+                          {typeOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                      </div>
+                    </>
+                  )}
 
                   {/* Recherche Button */}
                   <motion.button
                     onClick={handleStructuredSearch}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 h-11 px-6 rounded-full bg-gradient-to-r from-blue-500 to-violet-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow flex-shrink-0"
+                    className="flex items-center gap-1.5 h-11 px-5 md:px-6 rounded-full bg-gradient-to-r from-primary to-secondary text-primary-foreground text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow flex-shrink-0"
                   >
-                    Recherche
+                    <span className="hidden sm:inline">Recherche</span>
+                    <Search className="w-4 h-4 sm:hidden" />
                     <ArrowRight className="w-4 h-4" />
                   </motion.button>
                 </div>
@@ -222,14 +267,17 @@ export default function Index() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="flex items-center justify-center gap-2"
+                className="flex items-center justify-center"
               >
                 <Link
                   to="/dashboard/demande/new"
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-violet-100 dark:bg-white/15 backdrop-blur-sm border border-violet-200 dark:border-white/20 text-sm font-medium text-violet-700 dark:text-white/80 hover:text-violet-900 hover:bg-violet-200 dark:hover:text-white dark:hover:bg-white/25 transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/80 dark:bg-white/15 backdrop-blur-sm border border-border/60 dark:border-white/20 text-sm font-medium text-secondary hover:text-secondary/80 hover:bg-card dark:hover:bg-white/25 transition-all shadow-sm"
                 >
                   <Bot className="w-4 h-4" />
-                  Trouver pour moi (IA)
+                  <span>
+                    Trouver <span className="font-bold">pour moi</span>{" "}
+                    <span className="text-primary font-bold">(IA)</span>
+                  </span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </motion.div>
@@ -243,7 +291,7 @@ export default function Index() {
                 key={index}
                 onClick={() => setCurrentImageIndex(index)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentImageIndex ? "bg-violet-600 dark:bg-white w-6" : "bg-gray-400/50 hover:bg-gray-500/60 dark:bg-white/40 dark:hover:bg-white/60"
+                  index === currentImageIndex ? "bg-primary w-6" : "bg-foreground/20 hover:bg-foreground/40"
                 }`}
                 aria-label={`Image ${index + 1}`}
               />
@@ -252,30 +300,28 @@ export default function Index() {
         </section>
 
         {/* ===================== 3 FEATURE CARDS ===================== */}
-        <section className="relative z-20 -mt-12 md:-mt-16 pb-8 md:pb-12">
+        <section className="relative z-20 -mt-10 md:-mt-14 pb-8 md:pb-12">
           <div className="container-wide px-4">
-            <div className="grid md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+            {/* Desktop: 3 separate cards */}
+            <div className="hidden lg:grid lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
               {[
                 {
-                  icon: Bot,
-                  title: "Matching IA intelligent",
+                  icon: "🧠",
+                  title: "Matching IA",
+                  titleHighlight: "intelligent",
                   description: "L'IA vous recommande les logements qui correspondent vraiment à vos besoins.",
-                  gradient: "from-blue-500 to-blue-600",
-                  iconBg: "bg-blue-500/10",
                 },
                 {
-                  icon: MessageSquare,
-                  title: "Chat direct propriétaire",
+                  icon: "💬",
+                  title: "Chat direct",
+                  titleHighlight: "propriétaire",
                   description: "Discutez directement avec les proprios. Simple et sans engagement.",
-                  gradient: "from-violet-500 to-violet-600",
-                  iconBg: "bg-violet-500/10",
                 },
                 {
-                  icon: Shield,
-                  title: "Logements vérifiés",
+                  icon: "🛡️",
+                  title: "Logements",
+                  titleHighlight: "vérifiés",
                   description: "Chaque logement est vérifié par notre équipe pour votre tranquillité.",
-                  gradient: "from-emerald-500 to-emerald-600",
-                  iconBg: "bg-emerald-500/10",
                 },
               ].map((feature, index) => (
                 <motion.div
@@ -287,21 +333,69 @@ export default function Index() {
                   className="bg-card rounded-2xl p-5 md:p-6 border border-border shadow-lg hover:shadow-xl transition-shadow"
                 >
                   <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center flex-shrink-0`}>
-                      <feature.icon className="w-6 h-6 text-white" />
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-2xl">
+                      {feature.icon}
                     </div>
                     <div>
-                      <h3 className="font-bold text-base mb-1">{feature.title}</h3>
+                      <h3 className="font-bold text-base mb-1">
+                        {feature.title}{" "}
+                        <span className="text-primary">{feature.titleHighlight}</span>
+                      </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
+
+            {/* Mobile: Single card container with stacked items */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="lg:hidden bg-card rounded-2xl border border-border shadow-lg overflow-hidden max-w-lg mx-auto"
+            >
+              {[
+                {
+                  icon: "🧠",
+                  title: "Matching IA",
+                  titleHighlight: "intelligent",
+                  description: "L'IA vous recommande les logements qui correspondent vraiment à vos besoins.",
+                },
+                {
+                  icon: "💬",
+                  title: "Chat direct",
+                  titleHighlight: "propriétaire",
+                  description: "Discutez directement avec les proprios. Simple et sans engagement.",
+                },
+                {
+                  icon: "🛡️",
+                  title: "Logements",
+                  titleHighlight: "vérifiés",
+                  description: "Chaque logement est vérifié par notre équipe pour votre tranquillité.",
+                },
+              ].map((feature, index) => (
+                <div key={feature.title}>
+                  {index > 0 && <div className="h-px bg-border mx-5" />}
+                  <div className="flex items-start gap-3.5 p-5">
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-xl">
+                      {feature.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-sm mb-0.5">
+                        {feature.title}{" "}
+                        <span className="text-primary">{feature.titleHighlight}</span>
+                      </h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{feature.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </section>
 
-        {/* ===================== COMMENT ÇA MARCHE - 3 Steps ===================== */}
+        {/* ===================== COMMENT ÇA MARCHE ===================== */}
         <section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
           <div className="container-wide px-4">
             <div className="text-center mb-12 md:mb-16">
@@ -309,7 +403,7 @@ export default function Index() {
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-400 text-sm font-medium mb-4"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-4"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Notre modèle unique</span>
@@ -318,7 +412,7 @@ export default function Index() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 font-display"
               >
                 Les propriétaires viennent à vous
               </motion.h2>
@@ -333,31 +427,31 @@ export default function Index() {
               </motion.p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto mb-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto mb-12">
               {[
                 {
                   step: 1,
                   icon: FileText,
                   title: "Décrivez ce que vous cherchez",
                   description: "Budget, ville, type de logement, date... Remplissez votre profil en 2 minutes.",
-                  color: "text-blue-500",
-                  bg: "bg-blue-500/10",
+                  color: "text-primary",
+                  bg: "bg-primary/10",
                 },
                 {
                   step: 2,
                   icon: Users,
                   title: "Les propriétaires vous trouvent",
                   description: "Votre profil est visible par les propriétaires de la région qui ont un logement correspondant.",
-                  color: "text-violet-500",
-                  bg: "bg-violet-500/10",
+                  color: "text-secondary",
+                  bg: "bg-secondary/10",
                 },
                 {
                   step: 3,
                   icon: MessageSquare,
                   title: "Recevez des offres directes",
                   description: "Les propriétaires intéressés vous contactent. Échangez par messagerie et visitez.",
-                  color: "text-green-500",
-                  bg: "bg-green-500/10",
+                  color: "text-success",
+                  bg: "bg-success/10",
                 }
               ].map((item, index) => (
                 <motion.div
@@ -368,12 +462,12 @@ export default function Index() {
                   transition={{ delay: index * 0.15, duration: 0.5 }}
                   className="relative bg-card rounded-2xl p-6 border border-border hover:shadow-lg transition-all group text-center"
                 >
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-violet-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center text-sm font-bold shadow-lg">
                     {item.step}
                   </div>
 
                   {index < 2 && (
-                    <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-violet-500/50 to-transparent" />
+                    <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-secondary/50 to-transparent" />
                   )}
 
                   <div className={`w-16 h-16 rounded-2xl ${item.bg} flex items-center justify-center mb-4 mx-auto mt-2`}>
@@ -393,7 +487,7 @@ export default function Index() {
             >
               <Button
                 size="lg"
-                className="bg-violet-500 hover:bg-violet-600 text-white rounded-full h-12 px-8 text-base shadow-lg"
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full h-12 px-8 text-base shadow-lg"
                 asChild
               >
                 <Link to="/dashboard/demande/new">
@@ -418,7 +512,7 @@ export default function Index() {
               viewport={{ once: true }}
               className="text-center mb-10 md:mb-14"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 font-display">
                 Deux façons de trouver votre logement
               </h2>
               <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
@@ -434,32 +528,32 @@ export default function Index() {
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
                 onClick={() => navigate('/search')}
-                className="bg-card border border-border rounded-2xl p-6 md:p-8 hover:border-blue-400/50 hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer group"
+                className="bg-card border border-border rounded-2xl p-6 md:p-8 hover:border-primary/50 hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Search className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Search className="w-6 h-6 text-primary-foreground" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold">Chercher des annonces</h3>
-                    <span className="text-sm text-green-600 font-medium">Gratuit</span>
+                    <span className="text-sm text-success font-medium">Gratuit</span>
                   </div>
                 </div>
 
                 <p className="text-muted-foreground mb-5 text-sm sm:text-base">
-                  Parcourez les annonces vérifiées. Filtrez par ville, prix, type de logement.
+                  Parcourez les annonces vérifiées sur LocaSur. Filtrez par ville, prix, type.
                 </p>
 
                 <div className="space-y-2.5 mb-6">
                   {["Alertes email automatiques", "Carte interactive", "Annonces vérifiées"].map((item, i) => (
                     <div key={i} className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
 
-                <Button variant="outline" className="w-full rounded-xl h-12 text-base group-hover:bg-blue-500 group-hover:text-white group-hover:border-blue-500 transition-colors">
+                <Button variant="outline" className="w-full rounded-xl h-12 text-base group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors">
                   Chercher un logement
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -472,21 +566,21 @@ export default function Index() {
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
                 onClick={() => navigate('/dashboard/demande/new')}
-                className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/40 dark:to-purple-950/40 border-2 border-violet-400 dark:border-violet-600 rounded-2xl p-6 md:p-8 hover:border-violet-500 hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer relative group order-first md:order-none"
+                className="bg-secondary/5 border-2 border-secondary rounded-2xl p-6 md:p-8 hover:border-secondary/80 hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer relative group order-first md:order-none"
               >
                 <div className="flex justify-end -mt-1 mb-2">
-                  <span className="bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <span className="bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1 rounded-full">
                     RECOMMANDÉ
                   </span>
                 </div>
 
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Sparkles className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-6 h-6 text-secondary-foreground" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold">Créer mon profil locataire</h3>
-                    <span className="text-sm text-green-600 font-medium">Gratuit · 2 min</span>
+                    <span className="text-sm text-success font-medium">Gratuit · 2 min</span>
                   </div>
                 </div>
 
@@ -497,13 +591,13 @@ export default function Index() {
                 <div className="space-y-2.5 mb-6">
                   {["Les proprios vous écrivent", "Références vérifiées", "Postulez en 1 clic"].map((item, i) => (
                     <div key={i} className="flex items-center gap-2.5 text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-violet-600 flex-shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" />
                       <span className="font-medium">{item}</span>
                     </div>
                   ))}
                 </div>
 
-                <Button className="w-full rounded-xl h-12 text-base bg-violet-600 hover:bg-violet-700 text-white shadow-lg">
+                <Button className="w-full rounded-xl h-12 text-base bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg">
                   Créer mon profil en 2 min
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -525,7 +619,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* ===================== POURQUOI HOUSING AI ===================== */}
+        {/* ===================== POURQUOI LOCASUR ===================== */}
         <section className="py-14 md:py-20 bg-muted/30">
           <div className="container-wide px-4">
             <motion.div
@@ -534,7 +628,7 @@ export default function Index() {
               viewport={{ once: true }}
               className="text-center mb-10 md:mb-14"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 font-display">
                 Pourquoi LocaSur ?
               </h2>
               <p className="text-muted-foreground text-sm sm:text-base">
@@ -542,31 +636,31 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
               {[
                 {
                   icon: Shield,
                   title: "Références vérifiées",
                   description: "Historique locatif confirmé par les deux parties",
-                  gradient: "from-violet-500 to-violet-600",
+                  gradient: "from-secondary to-secondary/80",
                 },
                 {
                   icon: Search,
                   title: "Recherche intelligente",
                   description: "Trouvez le logement parfait en quelques clics",
-                  gradient: "from-blue-500 to-blue-600",
+                  gradient: "from-primary to-primary/80",
                 },
                 {
                   icon: Users,
                   title: "Marché inversé",
                   description: "Les proprios vous contactent, pas l'inverse",
-                  gradient: "from-emerald-500 to-emerald-600",
+                  gradient: "from-success to-success/80",
                 },
                 {
                   icon: Zap,
                   title: "100% gratuit",
                   description: "Aucun frais pour locataires et propriétaires",
-                  gradient: "from-orange-500 to-orange-600",
+                  gradient: "from-warning to-warning/80",
                 },
               ].map((feature, index) => (
                 <motion.div
@@ -595,26 +689,26 @@ export default function Index() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-violet-50 to-blue-50 dark:from-violet-950/30 dark:to-blue-950/30 rounded-3xl p-8 md:p-14 text-center border border-violet-200/50 dark:border-violet-800/30"
+              className="bg-gradient-to-br from-secondary/10 to-primary/10 rounded-3xl p-8 md:p-14 text-center border border-secondary/20"
             >
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
-                <Building2 className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center shadow-lg">
+                <Building2 className="w-8 h-8 text-secondary-foreground" />
               </div>
 
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Vous êtes propriétaire ?</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 font-display">Vous êtes propriétaire ?</h2>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto text-sm sm:text-base">
                 Consultez les profils de locataires avec références vérifiées. Publiez votre annonce et trouvez votre locataire idéal. 100% gratuit.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="bg-violet-600 hover:bg-violet-700 text-white rounded-full h-12 px-8 shadow-lg" asChild>
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full h-12 px-8 shadow-lg" asChild>
                   <Link to="/pour-proprietaires">
                     Louer mon logement
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="rounded-full h-12 px-8" asChild>
-                  <Link to="/demandes">
+                  <Link to="/host/demandes">
                     <Users className="w-4 h-4 mr-2" />
                     Voir les demandes
                   </Link>
@@ -637,7 +731,7 @@ export default function Index() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 font-display">
                 Explorer par ville
               </h2>
               <p className="text-muted-foreground text-sm sm:text-base">
@@ -645,7 +739,7 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {exploreCities.map((city, index) => {
                 const cityImage = getCityImage(city);
                 return (

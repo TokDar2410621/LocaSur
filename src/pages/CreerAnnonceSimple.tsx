@@ -1,10 +1,6 @@
 /**
- * Créer Annonce - Version 2 pages v3.0
- *
- * Principes:
- * - 2 pages avec navigation fluide
- * - Page 1: Infos essentielles (titre, adresse, type, prix, photos)
- * - Page 2: Caractéristiques (description, meublé, stationnement, commodités)
+ * Créer Annonce - Version 2 pages v4.0
+ * Style épuré, sections séparées, meilleure hiérarchie visuelle
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -15,7 +11,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
 import {
   MapPin, DollarSign, Home, Calendar, Image, ArrowRight, ArrowLeft,
-  Loader2, X, Plus, Check, Sofa, Car, Sparkles
+  Loader2, X, Plus, Check, Sofa, Car, Sparkles, Type
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
@@ -31,7 +27,6 @@ const STATIONNEMENT_OPTIONS = [
   { value: "non", label: "Non disponible", icon: "✗" },
 ];
 
-// Commodités avec mapping vers les champs backend
 const COMMODITES = [
   { id: "electromenagers_inclus", label: "Électroménagers", icon: "🍳" },
   { id: "chauffage_inclus", label: "Chauffage inclus", icon: "🔥" },
@@ -53,9 +48,7 @@ export default function CreerAnnonceSimple() {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
 
-  // Formulaire avec nouveaux champs
   const [form, setForm] = useState({
-    // Page 1 - Infos essentielles
     titre: "",
     adresse: "",
     ville: "",
@@ -64,7 +57,6 @@ export default function CreerAnnonceSimple() {
     prix: "",
     dateDisponible: "",
     photos: [] as File[],
-    // Page 2 - Caractéristiques
     description: "",
     meuble: false,
     stationnement: "non" as "inclus" | "disponible" | "non",
@@ -86,14 +78,12 @@ export default function CreerAnnonceSimple() {
 
       if (response.success) {
         const annonce = response.annonce;
-        // Convertir nombre_pieces en format type (ex: 4 -> "4½")
         let typeLogement = "";
         if (annonce.nombre_pieces) {
           const pieces = Math.floor(annonce.nombre_pieces);
           typeLogement = pieces >= 6 ? "6½+" : `${pieces}½`;
         }
 
-        // Récupérer les commodités depuis les booléens (champs existants dans le backend)
         const commodites: string[] = [];
         if (annonce.electromenagers_inclus) commodites.push("electromenagers_inclus");
         if (annonce.chauffage_inclus) commodites.push("chauffage_inclus");
@@ -101,12 +91,11 @@ export default function CreerAnnonceSimple() {
         if (annonce.buanderie) commodites.push("buanderie");
         if (annonce.balcon) commodites.push("balcon");
         if (annonce.animaux_acceptes) commodites.push("animaux_acceptes");
-        if (annonce.sous_sol) commodites.push("sous_sol");
+        if ((annonce as any).sous_sol) commodites.push("sous_sol");
 
-        // Déterminer le stationnement (simplifié: juste oui/non pour le backend actuel)
         let stationnement: "inclus" | "disponible" | "non" = "non";
         if (annonce.stationnement) {
-          stationnement = "inclus"; // Le backend ne distingue pas inclus/disponible pour l'instant
+          stationnement = "inclus";
         }
 
         setForm({
@@ -124,19 +113,18 @@ export default function CreerAnnonceSimple() {
           commodites,
         });
 
-        // Stocker les images existantes
         const images: string[] = [];
         if (annonce.image_url) images.push(annonce.image_url);
         if (annonce.images_supplementaires) images.push(...annonce.images_supplementaires);
         setExistingImages(images);
       } else {
         toast.error("Annonce introuvable");
-        navigate('/host');
+        navigate('/host/listings');
       }
     } catch (error: any) {
       toast.error("Erreur lors du chargement");
       console.error(error);
-      navigate('/host');
+      navigate('/host/listings');
     } finally {
       setLoading(false);
     }
@@ -149,10 +137,8 @@ export default function CreerAnnonceSimple() {
   const handlePhotoAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-
     const newPhotos = Array.from(files).slice(0, 5 - form.photos.length - existingImages.length);
     setForm(prev => ({ ...prev, photos: [...prev.photos, ...newPhotos] }));
-
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -172,9 +158,8 @@ export default function CreerAnnonceSimple() {
     }));
   };
 
-  // Validation pour chaque page
   const canProceedStep1 = form.titre && form.adresse && form.ville && form.type && form.prix;
-  const canSubmit = canProceedStep1; // Page 2 est optionnelle
+  const canSubmit = canProceedStep1;
 
   const handleNext = () => {
     if (currentStep === 1 && canProceedStep1) {
@@ -198,12 +183,10 @@ export default function CreerAnnonceSimple() {
 
     try {
       setSubmitting(true);
-
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const token = localStorage.getItem('auth_token');
 
       if (isEditMode && id) {
-        // Mode édition - utiliser l'API de mise à jour
         const updateData = {
           titre: form.titre,
           adresse: form.adresse,
@@ -213,10 +196,8 @@ export default function CreerAnnonceSimple() {
           prix: form.prix,
           date_disponible: form.dateDisponible || null,
           description: form.description,
-          // Caractéristiques principales
           meuble: form.meuble,
           stationnement: form.stationnement !== "non",
-          // Commodités (champs existants dans le backend)
           electromenagers_inclus: form.commodites.includes("electromenagers_inclus"),
           chauffage_inclus: form.commodites.includes("chauffage_inclus"),
           eau_incluse: form.commodites.includes("eau_incluse"),
@@ -224,7 +205,6 @@ export default function CreerAnnonceSimple() {
           balcon: form.commodites.includes("balcon"),
           animaux_acceptes: form.commodites.includes("animaux_acceptes"),
           sous_sol: form.commodites.includes("sous_sol"),
-          // Images
           image_url: existingImages[0] || null,
           images_supplementaires: existingImages.slice(1)
         };
@@ -241,34 +221,24 @@ export default function CreerAnnonceSimple() {
         });
 
         const data = await response.json();
-
         if (data.success) {
           toast.success("Annonce mise à jour!");
-          navigate('/host');
+          navigate('/host/listings');
         } else {
           throw new Error(data.message || data.error || "Erreur");
         }
       } else {
-        // Mode création
         const formData = new FormData();
         formData.append('titre', form.titre);
         formData.append('adresse', form.adresse);
         formData.append('ville', form.ville);
-        if (form.codePostal) {
-          formData.append('code_postal', form.codePostal);
-        }
+        if (form.codePostal) formData.append('code_postal', form.codePostal);
         formData.append('type_logement', form.type.replace('½', ' 1/2'));
         formData.append('prix', form.prix);
-        if (form.dateDisponible) {
-          formData.append('date_disponible', form.dateDisponible);
-        }
-        if (form.description) {
-          formData.append('description', form.description);
-        }
-        // Caractéristiques principales
+        if (form.dateDisponible) formData.append('date_disponible', form.dateDisponible);
+        if (form.description) formData.append('description', form.description);
         formData.append('meuble', String(form.meuble));
         formData.append('stationnement', String(form.stationnement !== "non"));
-        // Commodités (envoyer comme booléens individuels)
         formData.append('electromenagers_inclus', String(form.commodites.includes("electromenagers_inclus")));
         formData.append('chauffage_inclus', String(form.commodites.includes("chauffage_inclus")));
         formData.append('eau_incluse', String(form.commodites.includes("eau_incluse")));
@@ -292,7 +262,6 @@ export default function CreerAnnonceSimple() {
         });
 
         const data = await response.json();
-
         if (data.success) {
           if (data.address_warning) {
             toast.warning("Annonce publiée! Attention: une autre annonce existe déjà à cette adresse.", {
@@ -333,11 +302,11 @@ export default function CreerAnnonceSimple() {
         <div className="max-w-lg mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold mb-2">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold tracking-tight mb-2">
               {isEditMode ? "Modifier l'annonce" : "Publier une annonce"}
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground">
               {currentStep === 1 ? "Informations essentielles" : "Caractéristiques du logement"}
             </p>
           </div>
@@ -384,8 +353,8 @@ export default function CreerAnnonceSimple() {
             </div>
           </div>
 
-          {/* Form Container */}
-          <div className="bg-card rounded-2xl p-6 border border-border">
+          {/* Form Card */}
+          <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
                 <motion.div
@@ -394,200 +363,200 @@ export default function CreerAnnonceSimple() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
-                  className="space-y-5"
                 >
-                  {/* === PAGE 1: INFOS ESSENTIELLES === */}
-
-                  {/* Titre */}
-                  <div>
-                    <label className="text-sm font-semibold mb-2 block">
-                      Titre de l'annonce <span className="text-destructive">*</span>
-                    </label>
-                    <Input
-                      placeholder="Ex: Beau 4½ lumineux, près du centre"
-                      value={form.titre}
-                      onChange={(e) => setForm({ ...form, titre: e.target.value })}
-                      className="rounded-xl h-12"
-                      maxLength={100}
-                    />
-                  </div>
-
-                  {/* Adresse avec autocomplétion */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      Adresse <span className="text-destructive">*</span>
-                    </label>
-                    <AddressAutocomplete
-                      value={form.adresse}
-                      onChange={(value) => setForm({ ...form, adresse: value })}
-                      onSelect={(suggestion) => {
-                        setForm({
-                          ...form,
-                          adresse: suggestion.adresse,
-                          ville: suggestion.ville || form.ville,
-                          codePostal: suggestion.codePostal || form.codePostal
-                        });
-                      }}
-                      placeholder="Commencez à taper l'adresse..."
-                      className="rounded-xl h-11"
-                    />
-                  </div>
-
-                  {/* Ville + Code postal */}
-                  <div className="grid grid-cols-2 gap-3">
+                  {/* Section: Titre & Localisation */}
+                  <div className="p-6 space-y-5">
+                    {/* Titre */}
                     <div>
-                      <label className="text-sm font-semibold mb-2 block">
-                        Ville <span className="text-destructive">*</span>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                        <Type className="w-4 h-4 text-primary" />
+                        Titre de l'annonce <span className="text-destructive">*</span>
                       </label>
                       <Input
-                        placeholder="Saguenay"
-                        value={form.ville}
-                        onChange={(e) => setForm({ ...form, ville: e.target.value })}
-                        className="rounded-xl h-11"
+                        placeholder="Ex: Beau 4½ lumineux, près du centre"
+                        value={form.titre}
+                        onChange={(e) => setForm({ ...form, titre: e.target.value })}
+                        className="rounded-xl h-12"
+                        maxLength={100}
                       />
                     </div>
-                    <div>
-                      <label className="text-sm font-semibold mb-2 block">Code postal</label>
-                      <Input
-                        placeholder="G7H 1Z3"
-                        value={form.codePostal}
-                        onChange={(e) => setForm({ ...form, codePostal: e.target.value.toUpperCase() })}
-                        className="rounded-xl h-11"
-                        maxLength={7}
-                      />
-                    </div>
-                  </div>
 
-                  {/* Type */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                      <Home className="w-4 h-4 text-primary" />
-                      Type de logement <span className="text-destructive">*</span>
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {TYPES_LOGEMENT.map((type) => (
-                        <button
-                          key={type}
-                          onClick={() => setForm({ ...form, type })}
-                          className={cn(
-                            "px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all",
-                            form.type === type
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "border-border hover:border-primary/50"
-                          )}
-                        >
-                          {type}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Prix + Date */}
-                  <div className="grid grid-cols-2 gap-3">
+                    {/* Adresse */}
                     <div>
-                      <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                        <DollarSign className="w-4 h-4 text-primary" />
-                        Loyer <span className="text-destructive">*</span>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        Adresse <span className="text-destructive">*</span>
                       </label>
-                      <Input
-                        type="number"
-                        placeholder="850"
-                        value={form.prix}
-                        onChange={(e) => setForm({ ...form, prix: e.target.value })}
-                        className="rounded-xl h-11"
+                      <AddressAutocomplete
+                        value={form.adresse}
+                        onChange={(value) => setForm({ ...form, adresse: value })}
+                        onSelect={(suggestion) => {
+                          setForm({
+                            ...form,
+                            adresse: suggestion.adresse,
+                            ville: suggestion.ville || form.ville,
+                            codePostal: suggestion.codePostal || form.codePostal
+                          });
+                        }}
+                        placeholder="Commencez à taper l'adresse..."
+                        className="rounded-xl h-12"
                       />
-                      <p className="text-xs text-muted-foreground mt-1">$/mois</p>
                     </div>
-                    <div>
-                      <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        Disponible
-                      </label>
-                      <Input
-                        type="date"
-                        value={form.dateDisponible}
-                        onChange={(e) => setForm({ ...form, dateDisponible: e.target.value })}
-                        className="rounded-xl h-11"
-                      />
+
+                    {/* Ville + Code postal */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-sm font-semibold mb-2.5 block">
+                          Ville <span className="text-destructive">*</span>
+                        </label>
+                        <Input
+                          placeholder="Saguenay"
+                          value={form.ville}
+                          onChange={(e) => setForm({ ...form, ville: e.target.value })}
+                          className="rounded-xl h-12"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold mb-2.5 block">Code postal</label>
+                        <Input
+                          placeholder="G7H 1Z3"
+                          value={form.codePostal}
+                          onChange={(e) => setForm({ ...form, codePostal: e.target.value.toUpperCase() })}
+                          className="rounded-xl h-12"
+                          maxLength={7}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Photos */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold mb-2">
-                      <Image className="w-4 h-4 text-primary" />
-                      Photos <span className="text-muted-foreground font-normal">(max 5)</span>
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {/* Images existantes (mode édition) */}
-                      {existingImages.map((url, i) => (
-                        <div key={`existing-${i}`} className="relative w-20 h-20 rounded-xl overflow-hidden border border-border">
-                          <img
-                            src={url}
-                            alt={`Photo ${i + 1}`}
-                            className="w-full h-full object-cover"
-                          />
+                  <div className="border-t border-border" />
+
+                  {/* Section: Type & Prix */}
+                  <div className="p-6 space-y-5">
+                    {/* Type */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                        <Home className="w-4 h-4 text-primary" />
+                        Type de logement <span className="text-destructive">*</span>
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {TYPES_LOGEMENT.map((type) => (
                           <button
-                            onClick={() => removeExistingImage(i)}
-                            className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
+                            key={type}
+                            onClick={() => setForm({ ...form, type })}
+                            className={cn(
+                              "h-11 min-w-[56px] px-4 rounded-xl text-sm font-medium border transition-all",
+                              form.type === type
+                                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                                : "border-border hover:border-primary/40 hover:bg-accent/50"
+                            )}
                           >
-                            <X className="w-3 h-3" />
+                            {type}
                           </button>
-                        </div>
-                      ))}
-                      {/* Nouvelles photos */}
-                      {form.photos.map((photo, i) => (
-                        <div key={`new-${i}`} className="relative w-20 h-20 rounded-xl overflow-hidden border border-border">
-                          <img
-                            src={URL.createObjectURL(photo)}
-                            alt={`Nouvelle photo ${i + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <button
-                            onClick={() => removePhoto(i)}
-                            className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ))}
-                      {(existingImages.length + form.photos.length) < 5 && (
-                        <button
-                          onClick={() => fileInputRef.current?.click()}
-                          className="w-20 h-20 rounded-xl border-2 border-dashed border-border hover:border-primary/50 flex items-center justify-center transition-colors"
-                        >
-                          <Plus className="w-6 h-6 text-muted-foreground" />
-                        </button>
-                      )}
+                        ))}
+                      </div>
                     </div>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handlePhotoAdd}
-                      className="hidden"
-                    />
+
+                    {/* Prix + Date */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                          <DollarSign className="w-4 h-4 text-primary" />
+                          Loyer <span className="text-destructive">*</span>
+                        </label>
+                        <Input
+                          type="number"
+                          placeholder="850"
+                          value={form.prix}
+                          onChange={(e) => setForm({ ...form, prix: e.target.value })}
+                          className="rounded-xl h-12"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1.5">$/mois</p>
+                      </div>
+                      <div>
+                        <label className="flex items-center gap-2 text-sm font-semibold mb-2.5">
+                          <Calendar className="w-4 h-4 text-primary" />
+                          Disponible
+                        </label>
+                        <Input
+                          type="date"
+                          value={form.dateDisponible}
+                          onChange={(e) => setForm({ ...form, dateDisponible: e.target.value })}
+                          className="rounded-xl h-12"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Navigation */}
-                  <div className="flex justify-between pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => navigate(-1)}
-                      className="rounded-xl"
-                    >
-                      Annuler
-                    </Button>
-                    <Button
-                      onClick={handleNext}
-                      disabled={!canProceedStep1}
-                      className="rounded-xl"
-                    >
-                      Suivant
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                  <div className="border-t border-border" />
+
+                  {/* Section: Photos */}
+                  <div className="p-6 space-y-5">
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                        <Image className="w-4 h-4 text-primary" />
+                        Photos <span className="text-muted-foreground font-normal text-xs">(max 5)</span>
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {existingImages.map((url, i) => (
+                          <div key={`existing-${i}`} className="relative w-20 h-20 rounded-xl overflow-hidden border border-border">
+                            <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                            <button
+                              onClick={() => removeExistingImage(i)}
+                              className="absolute top-1 right-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                        {form.photos.map((photo, i) => (
+                          <div key={`new-${i}`} className="relative w-20 h-20 rounded-xl overflow-hidden border border-border">
+                            <img src={URL.createObjectURL(photo)} alt={`Nouvelle photo ${i + 1}`} className="w-full h-full object-cover" />
+                            <button
+                              onClick={() => removePhoto(i)}
+                              className="absolute top-1 right-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                        {(existingImages.length + form.photos.length) < 5 && (
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-20 h-20 rounded-xl border-2 border-dashed border-border hover:border-primary/50 flex items-center justify-center transition-colors"
+                          >
+                            <Plus className="w-6 h-6 text-muted-foreground" />
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handlePhotoAdd}
+                        className="hidden"
+                      />
+                    </div>
+
+                    {/* Navigation */}
+                    <div className="flex justify-between pt-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigate(-1)}
+                        className="rounded-xl"
+                      >
+                        Annuler
+                      </Button>
+                      <Button
+                        onClick={handleNext}
+                        disabled={!canProceedStep1}
+                        className="rounded-xl"
+                      >
+                        Suivant
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -599,164 +568,177 @@ export default function CreerAnnonceSimple() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
-                  className="space-y-6"
                 >
-                  {/* === PAGE 2: CARACTÉRISTIQUES === */}
-
-                  {/* Meublé */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold mb-3">
-                      <Sofa className="w-4 h-4 text-primary" />
-                      Logement meublé ?
-                    </label>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => setForm({ ...form, meuble: true })}
-                        className={cn(
-                          "flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all flex items-center justify-center gap-2",
-                          form.meuble
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "border-border hover:border-primary/50"
-                        )}
-                      >
-                        <Check className={cn("w-4 h-4", form.meuble ? "opacity-100" : "opacity-0")} />
-                        Oui, meublé
-                      </button>
-                      <button
-                        onClick={() => setForm({ ...form, meuble: false })}
-                        className={cn(
-                          "flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all flex items-center justify-center gap-2",
-                          !form.meuble
-                            ? "bg-muted text-foreground border-muted"
-                            : "border-border hover:border-primary/50"
-                        )}
-                      >
-                        Non meublé
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Stationnement */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold mb-3">
-                      <Car className="w-4 h-4 text-primary" />
-                      Stationnement
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {STATIONNEMENT_OPTIONS.map((option) => (
+                  {/* Section: Meublé & Stationnement */}
+                  <div className="p-6 space-y-5">
+                    {/* Meublé */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                        <Sofa className="w-4 h-4 text-primary" />
+                        Logement meublé ?
+                      </label>
+                      <div className="flex gap-3">
                         <button
-                          key={option.value}
-                          onClick={() => setForm({ ...form, stationnement: option.value as any })}
+                          onClick={() => setForm({ ...form, meuble: true })}
                           className={cn(
-                            "py-3 px-2 rounded-xl text-sm font-medium border-2 transition-all flex flex-col items-center gap-1",
-                            form.stationnement === option.value
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "border-border hover:border-primary/50"
+                            "flex-1 h-11 rounded-xl text-sm font-medium border transition-all flex items-center justify-center gap-2",
+                            form.meuble
+                              ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                              : "border-border hover:border-primary/40 hover:bg-accent/50"
                           )}
                         >
-                          <span className="text-lg">{option.icon}</span>
-                          <span className="text-xs">{option.label}</span>
+                          {form.meuble && <Check className="w-4 h-4" />}
+                          Oui, meublé
                         </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Commodités */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold mb-3">
-                      <Sparkles className="w-4 h-4 text-primary" />
-                      Commodités incluses
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {COMMODITES.map((commodite) => (
                         <button
-                          key={commodite.id}
-                          onClick={() => toggleCommodite(commodite.id)}
+                          onClick={() => setForm({ ...form, meuble: false })}
                           className={cn(
-                            "py-3 px-3 rounded-xl text-sm border-2 transition-all flex items-center gap-2",
-                            form.commodites.includes(commodite.id)
-                              ? "bg-primary/10 text-primary border-primary"
-                              : "border-border hover:border-primary/50"
+                            "flex-1 h-11 rounded-xl text-sm font-medium border transition-all flex items-center justify-center",
+                            !form.meuble
+                              ? "bg-muted text-foreground border-muted"
+                              : "border-border hover:border-primary/40 hover:bg-accent/50"
                           )}
                         >
-                          <span>{commodite.icon}</span>
-                          <span className="text-left text-xs font-medium">{commodite.label}</span>
-                          {form.commodites.includes(commodite.id) && (
-                            <Check className="w-4 h-4 ml-auto" />
-                          )}
+                          Non meublé
                         </button>
-                      ))}
+                      </div>
+                    </div>
+
+                    {/* Stationnement */}
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                        <Car className="w-4 h-4 text-primary" />
+                        Stationnement
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {STATIONNEMENT_OPTIONS.map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => setForm({ ...form, stationnement: option.value as any })}
+                            className={cn(
+                              "h-14 rounded-xl text-sm font-medium border transition-all flex flex-col items-center justify-center gap-0.5",
+                              form.stationnement === option.value
+                                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                                : "border-border hover:border-primary/40 hover:bg-accent/50"
+                            )}
+                          >
+                            <span className="text-base">{option.icon}</span>
+                            <span className="text-xs">{option.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Description */}
-                  <div>
-                    <label className="text-sm font-semibold mb-2 block">
-                      Description <span className="text-muted-foreground font-normal">(optionnel)</span>
-                    </label>
-                    <textarea
-                      placeholder="Décrivez votre logement: particularités, quartier, transports à proximité..."
-                      value={form.description}
-                      onChange={(e) => setForm({ ...form, description: e.target.value })}
-                      rows={4}
-                      maxLength={1000}
-                      className="w-full px-4 py-3 rounded-xl border border-border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    />
-                    <p className="text-xs text-muted-foreground text-right">{form.description.length}/1000</p>
+                  <div className="border-t border-border" />
+
+                  {/* Section: Commodités */}
+                  <div className="p-6 space-y-5">
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-semibold mb-3">
+                        <Sparkles className="w-4 h-4 text-primary" />
+                        Commodités incluses
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {COMMODITES.map((commodite) => (
+                          <button
+                            key={commodite.id}
+                            onClick={() => toggleCommodite(commodite.id)}
+                            className={cn(
+                              "h-12 px-3 rounded-xl text-sm border transition-all flex items-center gap-2",
+                              form.commodites.includes(commodite.id)
+                                ? "bg-primary/10 text-primary border-primary"
+                                : "border-border hover:border-primary/40 hover:bg-accent/50"
+                            )}
+                          >
+                            <span>{commodite.icon}</span>
+                            <span className="text-left text-xs font-medium flex-1">{commodite.label}</span>
+                            {form.commodites.includes(commodite.id) && (
+                              <Check className="w-4 h-4 shrink-0" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Résumé rapide */}
-                  <div className="bg-muted/50 rounded-xl p-4">
-                    <p className="text-sm font-semibold mb-2">Résumé de votre annonce</p>
-                    <div className="text-xs text-muted-foreground space-y-1">
-                      <p><span className="font-medium">Titre:</span> {form.titre}</p>
-                      <p><span className="font-medium">Adresse:</span> {form.adresse}, {form.ville}</p>
-                      <p><span className="font-medium">Type:</span> {form.type} • <span className="font-medium">Prix:</span> {form.prix}$/mois</p>
-                      <p>
-                        <span className="font-medium">Caractéristiques:</span>{" "}
-                        {form.meuble ? "Meublé" : "Non meublé"} •
-                        Stationnement {form.stationnement === "inclus" ? "inclus" : form.stationnement === "disponible" ? "disponible" : "non"}
-                      </p>
-                      {form.commodites.length > 0 && (
+                  <div className="border-t border-border" />
+
+                  {/* Section: Description & Actions */}
+                  <div className="p-6 space-y-5">
+                    {/* Description */}
+                    <div>
+                      <label className="text-sm font-semibold mb-2.5 block">
+                        Description <span className="text-muted-foreground font-normal text-xs">(optionnel)</span>
+                      </label>
+                      <textarea
+                        placeholder="Décrivez votre logement: particularités, quartier, transports à proximité..."
+                        value={form.description}
+                        onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        rows={4}
+                        maxLength={1000}
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-background text-base resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 touch-manipulation"
+                        style={{ fontSize: '16px' }}
+                      />
+                      <p className="text-xs text-muted-foreground text-right mt-1">{form.description.length}/1000</p>
+                    </div>
+
+                    {/* Résumé */}
+                    <div className="bg-muted/50 rounded-xl p-4">
+                      <p className="text-sm font-semibold mb-2">Résumé</p>
+                      <div className="text-xs text-muted-foreground space-y-1">
+                        <p><span className="font-medium text-foreground">Titre:</span> {form.titre}</p>
+                        <p><span className="font-medium text-foreground">Adresse:</span> {form.adresse}, {form.ville}</p>
                         <p>
-                          <span className="font-medium">Commodités:</span>{" "}
-                          {form.commodites.map(c => COMMODITES.find(x => x.id === c)?.label).join(", ")}
+                          <span className="font-medium text-foreground">Type:</span> {form.type} •{" "}
+                          <span className="font-medium text-foreground">Prix:</span> {form.prix}$/mois
                         </p>
-                      )}
+                        <p>
+                          <span className="font-medium text-foreground">Caractéristiques:</span>{" "}
+                          {form.meuble ? "Meublé" : "Non meublé"} •
+                          Stationnement {form.stationnement === "inclus" ? "inclus" : form.stationnement === "disponible" ? "disponible" : "non"}
+                        </p>
+                        {form.commodites.length > 0 && (
+                          <p>
+                            <span className="font-medium text-foreground">Commodités:</span>{" "}
+                            {form.commodites.map(c => COMMODITES.find(x => x.id === c)?.label).join(", ")}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Navigation */}
-                  <div className="flex justify-between pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={handleBack}
-                      className="rounded-xl"
-                    >
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Retour
-                    </Button>
-                    <Button
-                      onClick={handleSubmit}
-                      disabled={!canSubmit || submitting}
-                      className="rounded-xl"
-                    >
-                      {submitting ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <>
-                          {isEditMode ? "Enregistrer" : "Publier l'annonce"}
-                          <ArrowRight className="w-5 h-5 ml-2" />
-                        </>
-                      )}
-                    </Button>
+                    {/* Navigation */}
+                    <div className="flex justify-between pt-2">
+                      <Button
+                        variant="outline"
+                        onClick={handleBack}
+                        className="rounded-xl"
+                      >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Retour
+                      </Button>
+                      <Button
+                        onClick={handleSubmit}
+                        disabled={!canSubmit || submitting}
+                        className="rounded-xl"
+                      >
+                        {submitting ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>
+                            {isEditMode ? "Enregistrer" : "Publier l'annonce"}
+                            <ArrowRight className="w-5 h-5 ml-2" />
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Footer info */}
+          {/* Footer */}
           <p className="text-center text-xs text-muted-foreground mt-4">
             Étape {currentStep} sur 2
           </p>

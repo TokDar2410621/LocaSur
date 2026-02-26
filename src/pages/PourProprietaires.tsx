@@ -50,7 +50,7 @@ export default function PourProprietaires() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthContext();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authRedirectTo, setAuthRedirectTo] = useState('/demandes');
+  const [authRedirectTo, setAuthRedirectTo] = useState('/host/demandes');
 
   const handleCTAClick = (destination: string) => {
     if (isAuthenticated) {
@@ -151,7 +151,7 @@ export default function PourProprietaires() {
               <Button
                 size="lg"
                 className="gradient-match text-match-foreground rounded-xl h-12 px-6"
-                onClick={() => handleCTAClick('/demandes')}
+                onClick={() => handleCTAClick('/host/demandes')}
               >
                 <Users className="w-5 h-5 mr-2" />
                 Voir les locataires disponibles
@@ -338,7 +338,7 @@ export default function PourProprietaires() {
               </ul>
               <Button
                 className="w-full rounded-xl gradient-match text-match-foreground"
-                onClick={() => handleCTAClick('/demandes')}
+                onClick={() => handleCTAClick('/host/demandes')}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Voir les demandes
@@ -438,7 +438,7 @@ export default function PourProprietaires() {
               <div className="mt-6 pt-6 border-t border-border">
                 <Button
                   className="w-full sm:w-auto rounded-xl gradient-match text-match-foreground"
-                  onClick={() => handleCTAClick('/demandes')}
+                  onClick={() => handleCTAClick('/host/demandes')}
                 >
                   <Shield className="w-4 h-4 mr-2" />
                   Voir les locataires disponibles
@@ -576,7 +576,7 @@ export default function PourProprietaires() {
                 <Button
                   size="lg"
                   className="gradient-match text-match-foreground rounded-xl h-12 px-8"
-                  onClick={() => handleCTAClick('/demandes')}
+                  onClick={() => handleCTAClick('/host/demandes')}
                 >
                   <Users className="w-5 h-5 mr-2" />
                   Voir les locataires disponibles

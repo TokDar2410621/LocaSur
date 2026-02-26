@@ -157,7 +157,7 @@ export default function DashboardLocataireSimple() {
       count: favoris.length,
       label: "Favoris",
       description: "Logements sauvegardés",
-      path: "/dashboard",
+      path: "/dashboard/favoris",
       iconBg: "bg-rose-50 dark:bg-rose-950",
       iconColor: "text-rose-500",
       hoverBorder: "hover:border-rose-200 dark:hover:border-rose-800",
@@ -167,7 +167,7 @@ export default function DashboardLocataireSimple() {
       count: candidaturesCount,
       label: "Candidatures",
       description: "Envoyées aux propriétaires",
-      path: "/dashboard",
+      path: "/dashboard/candidatures",
       iconBg: "bg-violet-50 dark:bg-violet-950",
       iconColor: "text-violet-500",
       hoverBorder: "hover:border-violet-200 dark:hover:border-violet-800",
@@ -177,7 +177,7 @@ export default function DashboardLocataireSimple() {
       count: referencesCount,
       label: "Références",
       description: "Validées par des propriétaires",
-      path: "/profile",
+      path: "/dashboard/references",
       iconBg: "bg-amber-50 dark:bg-amber-950",
       iconColor: "text-amber-500",
       hoverBorder: "hover:border-amber-200 dark:hover:border-amber-800",
@@ -340,7 +340,7 @@ export default function DashboardLocataireSimple() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                navigate(`/profile`);
+                                navigate(`/dashboard/references`);
                               }}
                               className="text-xs text-primary font-medium hover:underline"
                             >
@@ -365,7 +365,7 @@ export default function DashboardLocataireSimple() {
                 {/* CTA Buttons */}
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => navigate('/profile?add=true')}
+                    onClick={() => navigate('/dashboard/references?add=true')}
                     className="flex-1 h-11 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-medium"
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -373,7 +373,7 @@ export default function DashboardLocataireSimple() {
                   </Button>
                   {rentalHistoryList.length > 0 && (
                     <Button
-                      onClick={() => navigate('/profile')}
+                      onClick={() => navigate('/dashboard/references')}
                       variant="outline"
                       className="h-11 rounded-xl border-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30"
                     >
@@ -505,7 +505,7 @@ export default function DashboardLocataireSimple() {
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-semibold">Tes favoris</h2>
                   <button
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => navigate('/dashboard/favoris')}
                     className="text-sm text-primary font-medium flex items-center gap-1"
                   >
                     Voir tout

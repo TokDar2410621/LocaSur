@@ -47,20 +47,20 @@ export function DashboardSidebar({ userType, user, stats, onLogout }: DashboardS
 
   const tenantNav: NavItem[] = [
     { icon: Home, label: "Apercu", path: "/dashboard" },
-    { icon: Heart, label: "Favoris", path: "/dashboard", badge: stats.favorisCount },
+    { icon: Heart, label: "Favoris", path: "/dashboard/favoris", badge: stats.favorisCount },
     { icon: FileText, label: "Ma demande", path: "/dashboard/demande" },
-    { icon: Send, label: "Candidatures", path: "/dashboard", badge: stats.candidaturesCount },
-    { icon: Star, label: "References", path: "/profile", badge: stats.referencesCount },
+    { icon: Send, label: "Candidatures", path: "/dashboard/candidatures", badge: stats.candidaturesCount },
+    { icon: Star, label: "References", path: "/dashboard/references", badge: stats.referencesCount },
     { icon: MessageSquare, label: "Messages", path: "/messages", badge: stats.unreadMessages },
-    { icon: Bell, label: "Alertes", path: "/search" },
+    { icon: Bell, label: "Alertes", path: "/dashboard/alertes" },
   ];
 
   const landlordNav: NavItem[] = [
     { icon: Home, label: "Apercu", path: "/host" },
     { icon: Users, label: "Locataires", path: "/host/leads" },
-    { icon: Building2, label: "Annonces", path: "/host", badge: stats.annoncesCount },
-    { icon: Inbox, label: "Candidatures", path: "/host" },
-    { icon: Star, label: "References", path: "/profile", badge: stats.referencesGivenCount },
+    { icon: Building2, label: "Annonces", path: "/host/listings", badge: stats.annoncesCount },
+    { icon: Inbox, label: "Candidatures", path: "/host/candidatures" },
+    { icon: Star, label: "References", path: "/host/references", badge: stats.referencesGivenCount },
     { icon: MessageSquare, label: "Messages", path: "/messages", badge: stats.unreadMessages },
     { icon: Plus, label: "Creer annonce", path: "/host/listing/new", highlight: true },
   ];
@@ -188,10 +188,10 @@ export function DashboardSidebar({ userType, user, stats, onLogout }: DashboardS
             <span>Mon profil</span>
           </Link>
           <Link
-            to="/profile"
+            to="/settings"
             className={cn(
               "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-              location.pathname === '/profile'
+              location.pathname === '/settings'
                 ? "bg-muted text-foreground"
                 : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
             )}
